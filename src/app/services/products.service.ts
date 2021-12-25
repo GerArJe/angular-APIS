@@ -3,9 +3,9 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpParams,
-  HttpStatusCode
+  HttpStatusCode,
 } from '@angular/common/http';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, retry, map } from 'rxjs/operators';
 
 import {
   CreateProductDTO,
@@ -25,11 +25,21 @@ export class ProductsService {
 
   getAllProducts(limit?: number, offset?: number) {
     let params = new HttpParams();
-    if (limit && offset) {
+    if (limit && (offset || offset === 0)) {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
-    return this.http.get<Product[]>(this.apiUrl, { params }).pipe(retry(3));
+    return this.http.get<Product[]>(this.apiUrl, { params }).pipe(
+      retry(3),
+      map((products) =>
+        products.map((item) => {
+          return {
+            ...item,
+            taxes: 0.19 * item.price,
+          };
+        })
+      )
+    );
   }
 
   getProduct(id: string) {
