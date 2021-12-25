@@ -33,6 +33,7 @@ export class ProductsComponent implements OnInit {
   };
   limit = 10;
   offset = 0;
+  statusDetail : 'loading' | 'success' | 'error' | 'init' = 'init';
 
   constructor(
     private storeService: StoreService,
@@ -55,11 +56,18 @@ export class ProductsComponent implements OnInit {
   }
 
   onShowDetail(id: string) {
-    this.productsService.getProduct(id).subscribe((data) => {
-      console.log(data);
-      this.togglePorductDetail();
-      this.productChosen = data;
-    });
+    this.statusDetail = 'loading';
+    this.togglePorductDetail();
+    this.productsService.getProduct(id).subscribe(
+      (data) => {
+        this.productChosen = data;
+        this.statusDetail = 'success';
+      },
+      (error) => {
+        window.alert(error);
+        this.statusDetail = 'error';
+      }
+    );
   }
 
   createNewProduct() {
@@ -99,9 +107,11 @@ export class ProductsComponent implements OnInit {
   }
 
   loadMore() {
-    this.productsService.getProductsByPage(this.limit, this.offset).subscribe((data) => {
-      this.products = this.products.concat(data);
-      this.offset += this.limit;
-    });
+    this.productsService
+      .getProductsByPage(this.limit, this.offset)
+      .subscribe((data) => {
+        this.products = this.products.concat(data);
+        this.offset += this.limit;
+      });
   }
 }
