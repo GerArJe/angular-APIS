@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Product } from '../../models/product.model';
+import { CreateProductDTO, Product } from '../../models/product.model';
 
 import { StoreService } from '../../services/store.service';
 import { ProductsService } from '../../services/products.service';
@@ -55,6 +55,19 @@ export class ProductsComponent implements OnInit {
       console.log(data);
       this.togglePorductDetail();
       this.productChosen = data;
+    });
+  }
+
+  createNewProduct() {
+    const product: CreateProductDTO = {
+      title: 'Nuevo producto',
+      description: 'lo que sea',
+      images: ['https://1.bp.blogspot.com/-79DdxzZkDog/T76QV6v5IuI/AAAAAAAAAEY/6DzpGZzsmfA/s320/homerocatolico_456_336.jpg'],
+      price: 1000,
+      categoryId: 2,
+    }
+    this.productsService.create(product).subscribe((data) => {
+      this.products.unshift(data);
     });
   }
 }
