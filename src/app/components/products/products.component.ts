@@ -99,7 +99,7 @@ export class ProductsComponent implements OnInit {
   }
 
   loadMore() {
-    this.productsService.getProductsByPage(this.limit, this.offset).subscribe((data) => {
+    this.productsService.getAllProducts(this.limit, this.offset).subscribe((data) => {
       this.products = this.products.concat(data);
       this.offset += this.limit;
     });
