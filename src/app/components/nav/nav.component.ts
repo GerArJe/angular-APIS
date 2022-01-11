@@ -13,7 +13,6 @@ import { StoreService } from '../../services/store.service';
 export class NavComponent implements OnInit {
   activeMenu = false;
   counter = 0;
-  token = '';
   profile: User | null = null;
 
   constructor(
@@ -33,21 +32,9 @@ export class NavComponent implements OnInit {
 
   login() {
     this.authService
-      .login('sebas@mail.com', '123456')
-      .pipe(
-        switchMap((auth) => {
-          this.token = auth.access_token;
-          return this.authService.profile(auth.access_token);
-        })
-      )
+      .loginAndGet('sebas@mail.com', '123456')
       .subscribe((user) => {
         this.profile = user;
       });
-  }
-
-  getProfile() {
-    this.authService.profile(this.token).subscribe((user) => {
-      this.profile = user;
-    });
   }
 }
