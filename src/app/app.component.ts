@@ -10,6 +10,7 @@ import { UsersService } from './services/users.service';
 export class AppComponent {
   imgParent = '';
   showImg = true;
+  token = '';
 
   constructor(
     private authService: AuthService,
@@ -17,7 +18,6 @@ export class AppComponent {
   ) {}
 
   onLoaded(img: string) {
-    console.log('log padre', img);
   }
 
   toggleImg() {
@@ -28,13 +28,9 @@ export class AppComponent {
     this.usersService
       .create({ name: 'Sebas', email: 'sebas@mail.com', password: '123456' })
       .subscribe((data) => {
-        console.log(data);
       });
   }
 
-  login() {
-    this.authService.login('sebas@mail.com', '123456').subscribe((data) => {
-      console.log(data.access_token);
-    });
-  }
+
+  
 }
